@@ -58,7 +58,7 @@ app.hono.post("/english", async (c) => {
     });
 
     let openaiResponse = completion.choices[0].message.content;
-    if (openaiResponse && openaiResponse.length > 30) {
+    if (openaiResponse && openaiResponse.length > 320) {
       openaiResponse = "Sorry, the translated text is over 320 characters! 😅"
     }
 
@@ -67,7 +67,7 @@ app.hono.post("/english", async (c) => {
     //   message = "Upthumbed!";
     // }
 
-    const reply = await neynarClient.publishCast(
+    await neynarClient.publishCast(
       process.env.SIGNER_UUID!,
       openaiResponse!,
       {
