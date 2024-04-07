@@ -7,8 +7,8 @@ import { handle } from "frog/vercel";
 import { CastParamType, NeynarAPIClient } from "@neynar/nodejs-sdk";
 import { Box, Heading, VStack, vars } from "../lib/ui.js";
 
-const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY ?? "";
-const neynarClient = new NeynarAPIClient(process.env.NEYNAR_API_KEY!);
+const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY!;
+const neynarClient = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const ADD_URL =
   "https://warpcast.com/~/add-cast-action?name=Translate+to+English&icon=comment&actionType=post&postUrl=https://translate-action.vercel.app/api/translate";
