@@ -12,7 +12,7 @@ const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY!;
 const neynarClient = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const ADD_URL =
-  "https://warpcast.com/~/add-cast-action?name=Translate+to+English&icon=comment&actionType=post&postUrl=https://translate-action.vercel.app/api/translate";
+  "https://warpcast.com/~/add-cast-action?name=Translate+to+English&icon=comment&actionType=post&postUrl=https://translate-action.vercel.app/api/english";
 
 export const app = new Frog({
   assetsPath: "/",
@@ -30,7 +30,7 @@ export const app = new Frog({
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
 // Cast action handler
-app.hono.post("/translate", async (c) => {
+app.hono.post("/english", async (c) => {
   const {
     trustedData: { messageBytes },
   } = await c.req.json();
@@ -50,7 +50,10 @@ app.hono.post("/translate", async (c) => {
     } = cast;
 
     const completion = await openai.chat.completions.create({
-      messages: [{ role: "system", content: `Translate this to Korean: ${text}` }],
+      messages: [
+        { role: "system", content: 'You are a translation bot that translates text to English. If the text is already in English, please respond appropriately.' },
+        { role: "user", content: `Translate this to English: ${text}` }
+      ],
       model: "gpt-3.5-turbo",
     });
 
@@ -81,34 +84,34 @@ app.hono.post("/translate", async (c) => {
 });
 
 // Frame handlers
-app.frame("/", (c) => {
-  return c.res({
-    image: (
-      <Box
-        grow
-        alignVertical="center"
-        backgroundColor="white"
-        padding="32"
-        border="1em solid rgb(138, 99, 210)"
-      >
-        <VStack gap="4">
-          <Heading color="fcPurple" align="center" size="64">
-            Upthumbs 👍
-          </Heading>
-        </VStack>
-      </Box>
-    ),
-    intents: [
-      <Button.Link href={ADD_URL}>Add Action</Button.Link>,
-      <Button value="leaderboard" action="/leaderboard">
-        🏆 Leaderboard
-      </Button>,
-      <Button value="start" action="/upthumbs">
-        👍 My Upthumbs
-      </Button>,
-    ],
-  });
-});
+// app.frame("/", (c) => {
+//   return c.res({
+//     image: (
+//       <Box
+//         grow
+//         alignVertical="center"
+//         backgroundColor="white"
+//         padding="32"
+//         border="1em solid rgb(138, 99, 210)"
+//       >
+//         <VStack gap="4">
+//           <Heading color="fcPurple" align="center" size="64">
+//             Upthumbs 👍
+//           </Heading>
+//         </VStack>
+//       </Box>
+//     ),
+//     intents: [
+//       <Button.Link href={ADD_URL}>Add Action</Button.Link>,
+//       <Button value="leaderboard" action="/leaderboard">
+//         🏆 Leaderboard
+//       </Button>,
+//       <Button value="start" action="/upthumbs">
+//         👍 My Upthumbs
+//       </Button>,
+//     ],
+//   });
+// });
 
 // @ts-ignore
 const isEdgeFunction = typeof EdgeFunction !== "undefined";
