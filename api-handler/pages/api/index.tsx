@@ -7,7 +7,7 @@ import { handle } from "frog/vercel";
 import { CastParamType, NeynarAPIClient } from "@neynar/nodejs-sdk";
 // import { Box, Heading, Text, VStack, vars } from "../lib/ui.js";
 
-const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY ?? "";
+const NEYNAR_API_KEY = process.env.NEXT_PUBLIC_NEYNAR_API_KEY ?? "";
 const neynarClient = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const ADD_URL =
@@ -27,7 +27,7 @@ export const app = new Frog({
 );
 
 // Cast action handler
-app.hono.post("/upthumb", async (c) => {
+app.hono.post("/translate", async (c) => {
   const {
     trustedData: { messageBytes },
   } = await c.req.json();
