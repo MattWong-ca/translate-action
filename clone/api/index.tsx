@@ -41,6 +41,7 @@ app.hono.post("/translate", async (c) => {
     const {
       cast: {
         author: { fid, username },
+        text
       },
     } = cast;
     if (result.action.interactor.fid === fid) {
@@ -50,7 +51,7 @@ app.hono.post("/translate", async (c) => {
     console.log("FID: ", fid);
     console.log("Username: ", username);
 
-    let message = `You upthumbed ${username}`;
+    let message = `${text}`;
     if (message.length > 30) {
       message = "Upthumbed!";
     }
