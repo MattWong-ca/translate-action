@@ -44,12 +44,13 @@ app.hono.post("/translate", async (c) => {
     const {
       cast: {
         // author: { fid, username },
-        text
+        text,
+        hash
       },
     } = cast;
 
     const completion = await openai.chat.completions.create({
-      messages: [{ role: "system", content: `Translate this to Japanese: ${text}` }],
+      messages: [{ role: "system", content: `Translate this to Korean: ${text}` }],
       model: "gpt-3.5-turbo",
     });
 
@@ -64,6 +65,14 @@ app.hono.post("/translate", async (c) => {
     if (message && message.length > 30) {
       message = "Upthumbed!";
     }
+
+    const reply = await neynarClient.publishCast(
+      process.env.SIGNER_UUID!,
+      message!,
+      {
+        replyTo: hash,
+      }
+    );
 
     return c.json({ message });
   } else {
