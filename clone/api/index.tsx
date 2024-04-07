@@ -11,7 +11,7 @@ const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY ?? "";
 const neynarClient = new NeynarAPIClient(process.env.NEYNAR_API_KEY!);
 
 const ADD_URL =
-  "https://warpcast.com/~/add-cast-action?name=Upthumb&icon=thumbsup&actionType=post&postUrl=https://upthumbs.app/api/upthumb";
+  "https://warpcast.com/~/add-cast-action?name=Translate+to+English&icon=comment&actionType=post&postUrl=https://translate-action.vercel.app/api/translate";
 
 export const app = new Frog({
   assetsPath: "/",
@@ -27,7 +27,7 @@ export const app = new Frog({
 );
 
 // Cast action handler
-app.hono.post("/upthumb", async (c) => {
+app.hono.post("/translate", async (c) => {
   const {
     trustedData: { messageBytes },
   } = await c.req.json();
