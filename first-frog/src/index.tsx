@@ -7,7 +7,6 @@ import { handle } from "frog/vercel";
 import { CastParamType, NeynarAPIClient } from "@neynar/nodejs-sdk";
 // import { upthumb } from "../lib/upthumb.js";
 // import { Box, Heading, Text, VStack, vars } from "../lib/ui.js";
-// import redis from "../lib/redis.js";
 
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY ?? "";
 const neynarClient = new NeynarAPIClient(process.env.NEYNAR_API_KEY!);
