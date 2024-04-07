@@ -11,7 +11,7 @@ const NEYNAR_API_KEY = process.env.NEXT_PUBLIC_NEYNAR_API_KEY ?? "";
 const neynarClient = new NeynarAPIClient(NEYNAR_API_KEY);
 
 const ADD_URL =
-  "https://warpcast.com/~/add-cast-action?name=Upthumb&icon=thumbsup&actionType=post&postUrl=https://upthumbs.app/api/upthumb";
+  "https://warpcast.com/~/add-cast-action?name=Upthumb&icon=comment&actionType=post&postUrl=https://upthumbs.app/api/upthumb";
 
 export const app = new Frog({
   assetsPath: "/",
@@ -25,6 +25,8 @@ export const app = new Frog({
     features: ["interactor", "cast"],
   })
 );
+
+export const runtime = 'edge'
 
 // Cast action handler
 app.hono.post("/translate", async (c) => {
@@ -60,5 +62,45 @@ app.hono.post("/translate", async (c) => {
 // const isProduction = isEdgeFunction || import.meta.env?.MODE !== "development";
 // devtools(app, isProduction ? { assetsPath: "/.frog" } : { serveStatic });
 
-export const GET = handle(app);
-export const POST = handle(app);
+devtools(app, { serveStatic });
+const handler = handle(app);
+export default handler;
+
+// /** @jsxImportSource frog/jsx */
+// import { Button, Frog, TextInput } from 'frog'
+// import { handle } from 'frog/next'
+// import { devtools } from 'frog/dev'
+// import { serveStatic } from 'frog/serve-static'
+
+// const app = new Frog({ 
+//   basePath: '/api',
+// })
+ 
+// // Uncomment to use Edge Runtime
+// export const runtime = 'edge'
+ 
+// app.frame('/', (c) => {
+//   const { buttonValue, status } = c
+//   return c.res({
+//     image: (
+//       <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>
+//         {status === 'initial' ? (
+//           'Select your fruit!'
+//         ) : (
+//           `Selected: ${buttonValue}`
+//         )}
+//       </div>
+//     ),
+//     intents: [
+//       <Button key="1" value="apple">Apple</Button>,
+//       <Button key="2" value="banana">Banana</Button>,
+//       <Button key="3" value="mango">Mango</Button>
+//     ]
+//   })
+// })
+
+// devtools(app, { serveStatic })
+ 
+// // export const GET = handle(app)
+// const handler = handle(app);
+// export default handler;
