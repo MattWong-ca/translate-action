@@ -6,6 +6,7 @@ import { neynar } from "frog/middlewares";
 import { handle } from "frog/vercel";
 import { CastParamType, NeynarAPIClient } from "@neynar/nodejs-sdk";
 import { Box, Heading, VStack, vars } from "../lib/ui.js";
+import OpenAI from "openai";
 
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY!;
 const neynarClient = new NeynarAPIClient(NEYNAR_API_KEY);
@@ -26,6 +27,8 @@ export const app = new Frog({
   })
 );
 
+const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+
 // Cast action handler
 app.hono.post("/translate", async (c) => {
   const {
@@ -40,19 +43,25 @@ app.hono.post("/translate", async (c) => {
     );
     const {
       cast: {
-        author: { fid, username },
+        // author: { fid, username },
         text
       },
     } = cast;
-    if (result.action.interactor.fid === fid) {
-      return c.json({ message: "Nice try." }, 400);
-    }
 
-    console.log("FID: ", fid);
-    console.log("Username: ", username);
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "system", content: `Translate this to Japanese: ${text}` }],
+      model: "gpt-3.5-turbo",
+    });
 
-    let message = `${text}`;
-    if (message.length > 30) {
+    // if (result.action.interactor.fid === fid) {
+    //   return c.json({ message: "Nice try." }, 400);
+    // }
+
+    // console.log("FID: ", fid);
+    // console.log("Username: ", username);
+
+    let message = completion.choices[0].message.content;
+    if (message && message.length > 30) {
       message = "Upthumbed!";
     }
 

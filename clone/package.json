@@ -11,7 +11,8 @@
     "@neynar/nodejs-sdk": "^1.14.0",
     "frog": "latest",
     "hono": "^4",
-    "ioredis": "^5.3.2"
+    "ioredis": "^5.3.2",
+    "openai": "^4.33.0"
   },
   "devDependencies": {
     "tsx": "^4.7.1",
