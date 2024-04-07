@@ -26,7 +26,7 @@ export const app = new Frog({
   })
 );
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
 // Cast action handler
 app.hono.post("/translate", async (c) => {
