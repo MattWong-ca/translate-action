@@ -27,7 +27,7 @@ export const app = new Frog({
   })
 );
 
-const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
 // Cast action handler
 app.hono.post("/translate", async (c) => {
