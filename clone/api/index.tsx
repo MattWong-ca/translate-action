@@ -57,29 +57,27 @@ app.hono.post("/english", async (c) => {
       model: "gpt-3.5-turbo",
     });
 
-    // if (result.action.interactor.fid === fid) {
-    //   return c.json({ message: "Nice try." }, 400);
-    // }
-
-    // console.log("FID: ", fid);
-    // console.log("Username: ", username);
-
-    let message = completion.choices[0].message.content;
-    if (message && message.length > 30) {
-      message = "Upthumbed!";
+    let openaiResponse = completion.choices[0].message.content;
+    if (openaiResponse && openaiResponse.length > 30) {
+      openaiResponse = "Sorry, the translated text is over 320 characters! 😅"
     }
+
+    // let message = completion.choices[0].message.content;
+    // if (message && message.length > 30) {
+    //   message = "Upthumbed!";
+    // }
 
     const reply = await neynarClient.publishCast(
       process.env.SIGNER_UUID!,
-      message!,
+      openaiResponse!,
       {
         replyTo: hash,
       }
     );
 
-    return c.json({ message });
+    return c.json({ message: "Translated! ✅" });
   } else {
-    return c.json({ message: "Unauthorized" }, 401);
+    return c.json({ message: "Error, please try again!" }, 401);
   }
 });
 
