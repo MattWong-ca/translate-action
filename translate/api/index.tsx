@@ -1,11 +1,11 @@
-import { Button, Frog } from "frog";
+import { Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { neynar as neynarHub } from "frog/hubs";
 import { neynar } from "frog/middlewares";
 import { handle } from "frog/vercel";
 import { CastParamType, NeynarAPIClient } from "@neynar/nodejs-sdk";
-import { Box, Heading, VStack, vars } from "../lib/ui.js";
+import { vars } from "../lib/ui.js";
 import OpenAI from "openai";
 
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY!;
@@ -59,21 +59,34 @@ app.hono.post("/english", async (c) => {
 
     let openaiResponse = completion.choices[0].message.content;
     if (openaiResponse && openaiResponse.length > 320) {
-      openaiResponse = "Sorry, the translated text is over 320 characters! 😅"
+      const replyOne = await neynarClient.publishCast(
+        process.env.SIGNER_UUID!,
+        openaiResponse.slice(0, 320),
+        {
+          replyTo: hash,
+        }
+      );
+      await neynarClient.publishCast(
+        process.env.SIGNER_UUID!,
+        openaiResponse.slice(320),
+        {
+          replyTo: replyOne.hash,
+        }
+      );
+    } else {
+      await neynarClient.publishCast(
+        process.env.SIGNER_UUID!,
+        openaiResponse!,
+        {
+          replyTo: hash,
+        }
+      );
     }
 
     // let message = completion.choices[0].message.content;
     // if (message && message.length > 30) {
     //   message = "Upthumbed!";
     // }
-
-    await neynarClient.publishCast(
-      process.env.SIGNER_UUID!,
-      openaiResponse!,
-      {
-        replyTo: hash,
-      }
-    );
 
     return c.json({ message: "Translated! ✅" });
   } else {
