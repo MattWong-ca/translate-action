@@ -1,4 +1,4 @@
-import { Frog } from "frog";
+import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { neynar as neynarHub } from "frog/hubs";
@@ -28,6 +28,63 @@ export const app = new Frog({
 );
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+
+app.castAction("/translate2", c => {
+  return c.frame({ path: '/view' })
+},
+  { name: "Translate 2", icon: "comment" }
+);
+
+app.frame('/view', async (c) => {
+  const castText = c.var.cast?.text;
+
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: 'You are a translation bot that translates text to English. If the text is already in English, please respond appropriately.' },
+      { role: "user", content: `Translate this to English: ${castText}` }
+    ],
+    model: "gpt-3.5-turbo",
+  });
+
+  let openaiResponse = completion.choices[0].message.content;
+
+  return c.res({
+    image: (
+      <div
+        style={{
+          alignItems: 'center',
+          background: 'black',
+          backgroundSize: '100% 100%',
+          display: 'flex',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+          height: '100%',
+          justifyContent: 'center',
+          textAlign: 'center',
+          width: '100%',
+        }}
+      >
+        <div
+          style={{
+            color: 'white',
+            fontSize: 60,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 30,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {`${openaiResponse}`}
+        </div>
+      </div>
+    ),
+    intents: [
+      <Button.Link href={`https://google.com`}>View Google!</Button.Link>,
+    ],
+  })
+})
 
 // Cast action handler
 app.hono.post("/english", async (c) => {
