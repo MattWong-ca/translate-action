@@ -67,7 +67,7 @@ app.frame('/view', async (c) => {
         <div
           style={{
             color: 'white',
-            fontSize: 30,
+            fontSize: 38,
             fontStyle: 'normal',
             letterSpacing: '-0.025em',
             lineHeight: 1.25,
@@ -81,7 +81,7 @@ app.frame('/view', async (c) => {
       </div>
     ),
     intents: [
-      <Button.Link href={`https://google.com`}>View Google!</Button.Link>,
+      <Button.Link href={`https://translate.google.com/?sl=auto&tl=en&text=${castText}&op=translate`}>View Google Translate</Button.Link>,
     ],
   })
 })
