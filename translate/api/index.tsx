@@ -67,12 +67,12 @@ app.frame('/view', async (c) => {
         <div
           style={{
             color: 'white',
-            fontSize: 38,
+            fontSize: 34,
             fontStyle: 'normal',
             letterSpacing: '-0.025em',
-            lineHeight: 1.25,
+            lineHeight: 1,
             marginTop: 10,
-            padding: '0 120px',
+            padding: '0 60px',
             whiteSpace: 'pre-wrap',
           }}
         >
