@@ -140,46 +140,11 @@ app.hono.post("/english", async (c) => {
       );
     }
 
-    // let message = completion.choices[0].message.content;
-    // if (message && message.length > 30) {
-    //   message = "Upthumbed!";
-    // }
-
     return c.json({ message: "Translated! ✅" });
   } else {
     return c.json({ message: "Error, please try again!" }, 401);
   }
 });
-
-// Frame handlers
-// app.frame("/", (c) => {
-//   return c.res({
-//     image: (
-//       <Box
-//         grow
-//         alignVertical="center"
-//         backgroundColor="white"
-//         padding="32"
-//         border="1em solid rgb(138, 99, 210)"
-//       >
-//         <VStack gap="4">
-//           <Heading color="fcPurple" align="center" size="64">
-//             Upthumbs 👍
-//           </Heading>
-//         </VStack>
-//       </Box>
-//     ),
-//     intents: [
-//       <Button.Link href={ADD_URL}>Add Action</Button.Link>,
-//       <Button value="leaderboard" action="/leaderboard">
-//         🏆 Leaderboard
-//       </Button>,
-//       <Button value="start" action="/upthumbs">
-//         👍 My Upthumbs
-//       </Button>,
-//     ],
-//   });
-// });
 
 // @ts-ignore
 const isEdgeFunction = typeof EdgeFunction !== "undefined";
