@@ -29,10 +29,10 @@ export const app = new Frog({
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
-app.castAction("/translate2", c => {
+app.castAction("/english", c => {
   return c.frame({ path: '/view' })
 },
-  { name: "Translate 2", icon: "comment" }
+  { name: "Translate to English", icon: "comment" }
 );
 
 app.frame('/view', async (c) => {
@@ -81,70 +81,70 @@ app.frame('/view', async (c) => {
       </div>
     ),
     intents: [
-      <Button.Link href={`https://translate.google.com/?sl=auto&tl=en&text=${castText}&op=translate`}>View Google Translate</Button.Link>,
+      <Button.Link href={`https://translate.google.com/?sl=auto&tl=en&text=${castText}&op=translate`}>View on Google Translate</Button.Link>,
     ],
   })
 })
 
 // Cast action handler
-app.hono.post("/english", async (c) => {
-  const {
-    trustedData: { messageBytes },
-  } = await c.req.json();
+// app.hono.post("/english", async (c) => {
+//   const {
+//     trustedData: { messageBytes },
+//   } = await c.req.json();
 
-  const result = await neynarClient.validateFrameAction(messageBytes);
-  if (result.valid) {
-    const cast = await neynarClient.lookUpCastByHashOrWarpcastUrl(
-      result.action.cast.hash,
-      CastParamType.Hash
-    );
-    const {
-      cast: {
-        // author: { fid, username },
-        text,
-        hash
-      },
-    } = cast;
+//   const result = await neynarClient.validateFrameAction(messageBytes);
+//   if (result.valid) {
+//     const cast = await neynarClient.lookUpCastByHashOrWarpcastUrl(
+//       result.action.cast.hash,
+//       CastParamType.Hash
+//     );
+//     const {
+//       cast: {
+//         // author: { fid, username },
+//         text,
+//         hash
+//       },
+//     } = cast;
 
-    const completion = await openai.chat.completions.create({
-      messages: [
-        { role: "system", content: 'You are a translation bot that translates text to English. If the text is already in English, please respond appropriately.' },
-        { role: "user", content: `Translate this to English: ${text}` }
-      ],
-      model: "gpt-3.5-turbo",
-    });
+//     const completion = await openai.chat.completions.create({
+//       messages: [
+//         { role: "system", content: 'You are a translation bot that translates text to English. If the text is already in English, please respond appropriately.' },
+//         { role: "user", content: `Translate this to English: ${text}` }
+//       ],
+//       model: "gpt-3.5-turbo",
+//     });
 
-    let openaiResponse = completion.choices[0].message.content;
-    if (openaiResponse && openaiResponse.length > 320) {
-      const replyOne = await neynarClient.publishCast(
-        process.env.SIGNER_UUID!,
-        openaiResponse.slice(0, 320),
-        {
-          replyTo: hash,
-        }
-      );
-      await neynarClient.publishCast(
-        process.env.SIGNER_UUID!,
-        openaiResponse.slice(320),
-        {
-          replyTo: replyOne.hash,
-        }
-      );
-    } else {
-      await neynarClient.publishCast(
-        process.env.SIGNER_UUID!,
-        openaiResponse!,
-        {
-          replyTo: hash,
-        }
-      );
-    }
+//     let openaiResponse = completion.choices[0].message.content;
+//     if (openaiResponse && openaiResponse.length > 320) {
+//       const replyOne = await neynarClient.publishCast(
+//         process.env.SIGNER_UUID!,
+//         openaiResponse.slice(0, 320),
+//         {
+//           replyTo: hash,
+//         }
+//       );
+//       await neynarClient.publishCast(
+//         process.env.SIGNER_UUID!,
+//         openaiResponse.slice(320),
+//         {
+//           replyTo: replyOne.hash,
+//         }
+//       );
+//     } else {
+//       await neynarClient.publishCast(
+//         process.env.SIGNER_UUID!,
+//         openaiResponse!,
+//         {
+//           replyTo: hash,
+//         }
+//       );
+//     }
 
-    return c.json({ message: "Translated! ✅" });
-  } else {
-    return c.json({ message: "Error, please try again!" }, 401);
-  }
-});
+//     return c.json({ message: "Translated! ✅" });
+//   } else {
+//     return c.json({ message: "Error, please try again!" }, 401);
+//   }
+// });
 
 // @ts-ignore
 const isEdgeFunction = typeof EdgeFunction !== "undefined";
